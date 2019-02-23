@@ -1,0 +1,30 @@
+provider: aws
+api: ec2
+type: instance
+metadata:
+  name: constellation-test-instance
+  vpc: 
+  tagBehavior: merge ## options [append, replace, merge]
+  annotations:
+    test+-=._:/@.-tag: letters and characters
+    aws:-tag: invalid tag
+    Test-TAG: Case sensitive tag
+resourceSelector:
+  target-tag: target-value
+spec:
+  ami: ami-id
+  size: t2.micro
+  userdata: |
+    #!/bin/bash
+
+    echo "User data"
+  securityGroups:
+    ## can be ref or ID
+    - securityGroupRef:
+        selector:
+          application: test-stack
+        ## TODO: add filter support. this might need some investigation
+        ## to reasonably implement against AWS sg filters
+        # filters:
+        #   name: value
+    - id: sg-123456

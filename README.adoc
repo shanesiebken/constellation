@@ -1,0 +1,59 @@
+= Constellation
+Author: Shane Siebken
+
+== Purpose
+Constellation is a tool intended to allow declarative definition
+of Cloud resources in various cloud providers. It was inspired by
+the work by Hashicorp on Terraform, as well as CloudFormation and
+other tools. It aims to provide a simple, state-based cloud management
+system, similar in spirit to Kubernetes object / resource definition
+and state resolution.
+
+== Motivation
+Warning: This segment is fully anecdotal and opinion-based. It
+is in *no* way intended to minimize the incredible work of teams on tools
+like Terraform, CloudFormation, and others that may not be mentioned
+here. I have the utmost respect for these tools and teams, and the work I
+have done on Constellation would not be possible without other tools as
+inspiration and as a jumping off point. I, like many in the Open Source
+community, stand on the shoulders of giants. The following frustrations
+are simply intended to explain my reasoning for creating yet another tool
+in an environment which already has many excellent offerings.
+
+There are many excellent Cloud Management toolsets in the Open Source
+Community. I have used a number of them, and my frustrations / objections
+generally boil down to a few things.
+  1. Many of these toolsets are fundamentally imperative or functional. In
+  a cloud environment, resource creation is generally not instantaneous.
+  In many imperative models, this can lead to long waits on command line tools,
+  operational failure in those tools, and other problems.
+    a. The imperative model of resource management also seems to me to be
+    philosophically at odds with much of the use-case of Cloud resources. That is,
+    to create long-lived sets of resources, while still being able to predictably 
+    enforce a potentially changing desired state at a later time. Writing change sets
+    as processes, i.e. utilizing Ansible for state management, is difficult to do
+    (properly) idempotently, and requires more cognitive overhead in the constantly
+    shifting Cloud landscape than simply defining a desired state for enforcement.
+  2. The few declarative tools which I have been able to find and use have problems
+  of their own for use-cases I have encountered.
+    a. CloudFormation is sadly limited when trying to monitor / manage large-scale
+    applications which may straddle AWS account lines, or dip into other cloud
+    providers for certain applications. I also have some personal distaste for
+    CloudFormation pseudo-functions and the general syntax. A declarative authoring
+    tool that nigh requires supporting tools for success is hard to apply in a
+    consistent manner across teams and environments.
+    b. Terraform is an excellent tool, but in my opinion is hampered by its
+    basis in HCL. HCL always seems to me to want to be a templating language,
+    but it falls short of offering simple primitives like conditionals and contained
+    loops (i.e. count can't be used in a reasonable way to create a complex object
+    within a resource block). HCL always leaves me feeling like I am simultaneously
+    underutilizing it, yet asking it for too much. It basically leaves me with
+    a bad taste in my mouth for all but the most simple use-cases.
+
+With these inspirations and frustrations in mind, I set out to create a
+Cloud toolset that allows declarative Cloud resource creation and management,
+with a similar mindset to state enforcement as a system like Kubernetes.
+This means it could potentially be run as a constant state-enforcement server
+with a developer API, simplifying what it means to be a Cloud developer and
+enabling ops teams to accomplish more.
+
